@@ -20,6 +20,7 @@ def snmp_lab1(list):
     #takes the list generated from the gather_devices function and iterates over
     #the list using the SNMP String and IP address as inputs to gather the sysname 
     #and sysdesc over SNMP. Prints out the sysdesc and sysname for each item in the list
+    print("\n------------------------------------------------------------------------------------------\n\n")
     for i in list:
         COMMUNITY_STRING = i['String']
         IP = i['DeviceIP']
@@ -31,7 +32,28 @@ def snmp_lab1(list):
         sysname = snmp_extract(snmp_sysname)
         snmp_sysdesc = (snmp_get_oid(a_device, oid=sysdescoid))
         sysdesc = snmp_extract(snmp_sysdesc)
-        print (sysname + sysdesc + '\n\n\n\n')
+        if "Cisco" in sysdesc:
+            # Uptime when running config last changed    
+            ccmHistoryRunningLastChangedoid = '1.3.6.1.4.1.9.9.43.1.1.1.0'   
+            # Uptime when running config last saved (note any 'write' constitutes a save)
+            ccmHistoryRunningLastSavedoid = '1.3.6.1.4.1.9.9.43.1.1.2.0'   
+            # Uptime when startup config last saved   
+            ccmHistoryStartupLastChangedoid = '1.3.6.1.4.1.9.9.43.1.1.3.0'
+            snmpRunChange = (snmp_get_oid(a_device, oid=ccmHistoryRunningLastChangedoid))
+            RunChange = snmp_extract(snmpRunChange)
+            snmpStartChange = (snmp_get_oid(a_device, oid=ccmHistoryRunningLastSavedoid))
+            StartChange = snmp_extract(snmpStartChange)
+            snmpRunSave = (snmp_get_oid(a_device, oid=ccmHistoryStartupLastChangedoid))
+            RunSave = snmp_extract(snmpRunSave)
+            print (sysname +"\n"+ sysdesc +"\n\n")
+            print ("Running Config Last Changed at:" + str(snmpRunChange)+"\n")
+            print ("\n Running Config Last Saved at:" + str(RunSave)+"\n")
+            print ("\n Startup Config Last Changed at:" + str(StartChange)+"\n")
+            print("\n------------------------------------------------------------------------------------------\n\n")
+        else:
+            print (sysname + sysdesc + '\n\n\n')
+            print("\n------------------------------------------------------------------------------------------\n\n")
+        
         
 
                         
