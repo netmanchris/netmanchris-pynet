@@ -16,7 +16,7 @@ def gather_devices():
         return list_of_devices
         
 
-def snmp_lab1(list):
+def lab3(list):
     #takes the list generated from the gather_devices function and iterates over
     #the list using the SNMP String and IP address as inputs to gather the sysname 
     #and sysdesc over SNMP. Prints out the sysdesc and sysname for each item in the list
@@ -45,6 +45,8 @@ def snmp_lab1(list):
             StartChange = snmp_extract(snmpStartChange)
             snmpRunSave = (snmp_get_oid(a_device, oid=ccmHistoryStartupLastChangedoid))
             RunSave = snmp_extract(snmpRunSave)
+            if snmpRunSave == 0:
+                print("This device has not been saved since the last reboot")
             print (sysname +"\n"+ sysdesc +"\n\n")
             print ("Running Config Last Changed at:" + str(snmpRunChange)+"\n")
             print ("\n Running Config Last Saved at:" + str(RunSave)+"\n")
