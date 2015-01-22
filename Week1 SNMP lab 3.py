@@ -91,19 +91,21 @@ def gather_devices():
     while more == "Y" or more == "y":
         #gathers user input to populate list_of_devices list of dictionies
         #loops until user answers 'N'
-        device=input('''What is the IP address of the device you wish to work with?''')
-        SNMP_String=input('''What is the SNMP read String for this device?''')
+        device=input('''What is the IP address of the device you wish to connect to : ''')
+        SNMP_String=input('''What is the SNMP read String for this device?: ''')
         device_dict = {'DeviceIP':device,'String':SNMP_String}
         list_of_devices.append(device_dict)
-        more = input('''Do you wish to add more devices? Y/N''')
+        more = input('''Do you wish to add more devices? Y/N: ''')
     else:
         return list_of_devices
-        
+      
 
-def lab3(list):
+def lab3(list=None):
     #takes the list generated from the gather_devices function and iterates over
     #the list using the SNMP String and IP address as inputs to gather the sysname 
     #and sysdesc over SNMP. Prints out the sysdesc and sysname for each item in the list
+    if list == None:
+        list = list_of_devices
     print("\n------------------------------------------------------------------------------------------\n\n")
     for i in list:
         COMMUNITY_STRING = i['String']
@@ -133,14 +135,9 @@ def lab3(list):
             if RunSave == '0':
                 print("This device has not been saved since the last reboot")
             print (sysname +"\n"+ sysdesc +"\n\n")
-            print ("Running Config Last Changed at:" + str(snmpRunChange)+"\n")
             if RunSave == '0':
                 print("This device has NOT been saved since the last reboot")
                 print ("\n Running Config Last Saved at:" + str(RunSave)+"\n")
-            else:
-                print("This device has been saved since the last reboot")
-                print ("\n Running Config Last Saved at:" + str(RunSave)+"\n")
-            print ("\n Startup Config Last Changed at:" + str(StartChange)+"\n")
             print("\n------------------------------------------------------------------------------------------\n\n")
         else:
             print (sysname + sysdesc + '\n\n\n')
